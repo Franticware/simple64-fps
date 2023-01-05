@@ -13,6 +13,7 @@ typedef struct
     int deadzone;
     int range;
     float sensitivity;
+    float mouse_sensitivity;
 } SController;
 
 extern "C"

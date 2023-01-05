@@ -569,10 +569,33 @@ ProfileEditor::ProfileEditor(QString profile, QSettings *settings, QWidget *pare
     layout->addWidget(buttonLabelSensitivityValue, 10, 1);
     layout->addWidget(sliderSensitivity, 10, 2, 1, 6);
 
+    QLabel *buttonLabelMouse = new QLabel("Mouse Sensitivity", this);
+    buttonLabelMouse->setAlignment(Qt::AlignCenter);
+    QLabel *buttonLabelMouseValue = new QLabel(this);
+    if (!settings->contains(section + "/MouseSensitivity"))
+        settings->setValue(section + "/MouseSensitivity", 100.0);
+    float mouseValue = settings->value(section + "/MouseSensitivity").toFloat();
+    buttonLabelMouseValue->setText(QString::number(mouseValue) + "%");
+    buttonLabelMouseValue->setAlignment(Qt::AlignCenter);
+    QSlider *sliderMouse = new QSlider(Qt::Horizontal, this);
+    sliderMouse->setMinimum(100);
+    sliderMouse->setMaximum(4000);
+    sliderMouse->setTickPosition(QSlider::TicksBothSides);
+    sliderMouse->setTickInterval(50);
+    sliderMouse->setSliderPosition((int)(mouseValue * 10.0));
+    connect(sliderMouse, &QSlider::valueChanged, [=](int value) {
+        float percent = value / 10.0;
+        buttonLabelMouseValue->setText(QString::number(percent, 'f', 1) + "%");
+    });
+
+    layout->addWidget(buttonLabelMouse, 11, 0);
+    layout->addWidget(buttonLabelMouseValue, 11, 1);
+    layout->addWidget(sliderMouse, 11, 2, 1, 6);
+
     QFrame* lineH3 = new QFrame(this);
     lineH3->setFrameShape(QFrame::HLine);
     lineH3->setFrameShadow(QFrame::Sunken);
-    layout->addWidget(lineH3, 11, 0, 1, 8);
+    layout->addWidget(lineH3, 12, 0, 1, 8);
 
     QPushButton *buttonPushSave = new QPushButton("Save and Close", this);
     connect(buttonPushSave, &QPushButton::released, [=]() {
@@ -616,6 +639,8 @@ ProfileEditor::ProfileEditor(QString profile, QSettings *settings, QWidget *pare
             settings->setValue(saveSection + "/Deadzone", percent);
             percent = sliderSensitivity->value() / 10.0;
             settings->setValue(saveSection + "/Sensitivity", percent);
+            percent = sliderMouse->value() / 10.0;
+            settings->setValue(saveSection + "/MouseSensitivity", percent);
             this->done(1);
         }
         else {
@@ -624,12 +649,12 @@ ProfileEditor::ProfileEditor(QString profile, QSettings *settings, QWidget *pare
             msgBox.exec();
         }
     });
-    layout->addWidget(buttonPushSave, 12, 0, 1, 2);
+    layout->addWidget(buttonPushSave, 13, 0, 1, 2);
     QPushButton *buttonPushClose = new QPushButton("Close Without Saving", this);
     connect(buttonPushClose, &QPushButton::released, [=]() {
         this->done(1);
     });
-    layout->addWidget(buttonPushClose, 12, 6, 1, 2);
+    layout->addWidget(buttonPushClose, 13, 6, 1, 2);
 
     setLayout(layout);
     setWindowTitle(tr("Profile Editor"));

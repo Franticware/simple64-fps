@@ -28,6 +28,8 @@ extern void event_sdl_keydown(int keysym, int keymod);
 extern void event_sdl_keyup(int keysym, int keymod);
 extern int event_gameshark_active(void);
 extern void event_set_gameshark(int active);
+extern void event_mouserelx(int);
+extern void event_mouserely(int);
 
 #endif /* define(EVENTLOOP_H) */
 

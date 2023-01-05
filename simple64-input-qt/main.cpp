@@ -187,6 +187,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreHandle, void * objec
 
         settings->setValue(section + "/Deadzone", DEADZONE_DEFAULT);
         settings->setValue(section + "/Sensitivity", 100.0);
+        settings->setValue(section + "/MouseSensitivity", 100.0);
     }
 
     section = "Auto-Gamepad";
@@ -244,6 +245,7 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreHandle, void * objec
 
         settings->setValue(section + "/Deadzone", DEADZONE_DEFAULT);
         settings->setValue(section + "/Sensitivity", 100.0);
+        settings->setValue(section + "/MouseSensitivity", 100.0);
     }
 
     if (!SDL_WasInit(SDL_INIT_GAMECONTROLLER))
@@ -679,6 +681,14 @@ void setPak(int Control)
         controller[Control].control->Plugin = PLUGIN_MEMPAK;
 }
 
+static int mouseRelXSum = 0;
+static int mouseRelYSum = 0;
+
+static int mouseToAxis(int rel, float sensitivity)
+{
+    return std::floor(std::sqrt(rel) * sensitivity + 4.5);
+}
+
 EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
 {
     if (controller[Control].control->Present == 0)
@@ -720,6 +730,36 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
     setAxis(Control, 0/*X_AXIS*/, Keys, "AxisRight", 1);
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisUp", 1);
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisDown", -1);
+
+    if (Control == 0)
+    {
+        if (mouseRelXSum || mouseRelYSum)
+        {
+            int signX = 1;
+            int signY = 1;
+            int mouseRelXSum_ = mouseRelXSum;
+            int mouseRelYSum_ = mouseRelYSum;
+            if (mouseRelXSum_ < 0)
+            {
+                signX = -1;
+                mouseRelXSum_ = -mouseRelXSum_;
+            }
+            if (mouseRelYSum_ < 0)
+            {
+                signY = -1;
+                mouseRelYSum_ = -mouseRelYSum_;
+            }
+            const float mouseSensitivityX = 4 * controller[Control].mouse_sensitivity;
+            const float mouseSensitivityY = mouseSensitivityX * 2;
+            mouseRelXSum_ = mouseToAxis(mouseRelXSum_, mouseSensitivityX);
+            mouseRelYSum_ = mouseToAxis(mouseRelYSum_, mouseSensitivityY);
+            if (mouseRelXSum_ > MAX_AXIS_VALUE) mouseRelXSum_ = MAX_AXIS_VALUE;
+            if (mouseRelYSum_ > MAX_AXIS_VALUE) mouseRelYSum_ = MAX_AXIS_VALUE;
+            Keys->X_AXIS = mouseRelXSum_ * signX;
+            Keys->Y_AXIS = mouseRelYSum_ * signY;
+            mouseRelXSum = mouseRelYSum = 0;
+        }
+    }
 }
 
 static int setupVosk()
@@ -883,10 +923,13 @@ EXPORT void CALL InitiateControllers(CONTROL_INFO ControlInfo)
             gameSettings->setValue(controller[i].profile + "/Deadzone", DEADZONE_DEFAULT);
         if (!gameSettings->contains(controller[i].profile + "/Sensitivity"))
             gameSettings->setValue(controller[i].profile + "/Sensitivity", 100.0);
+        if (!gameSettings->contains(controller[i].profile + "/MouseSensitivity"))
+            gameSettings->setValue(controller[i].profile + "/MouseSensitivity", 100.0);
 
         controller[i].deadzone = AXIS_PEAK * (gameSettings->value(controller[i].profile + "/Deadzone").toFloat() / 100.0);
         controller[i].range = AXIS_PEAK - controller[i].deadzone;
         controller[i].sensitivity = gameSettings->value(controller[i].profile + "/Sensitivity").toFloat() / 100.0;
+        controller[i].mouse_sensitivity = gameSettings->value(controller[i].profile + "/MouseSensitivity").toFloat() / 100.0;
 
         setPak(i);
     }
@@ -929,6 +972,16 @@ EXPORT void CALL SDL_KeyDown(int, int keysym)
 EXPORT void CALL SDL_KeyUp(int, int keysym)
 {
     myKeyState[keysym] = 0;
+}
+
+EXPORT void CALL MouseRelX(int relx)
+{
+    mouseRelXSum += relx;
+}
+
+EXPORT void CALL MouseRelY(int rely)
+{
+    mouseRelYSum -= rely;
 }
 
 EXPORT void CALL PluginConfig()

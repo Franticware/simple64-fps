@@ -717,3 +717,12 @@ void event_set_gameshark(int active)
     StateChanged(M64CORE_INPUT_GAMESHARK, GamesharkActive);
 }
 
+void event_mouserelx(int relx)
+{
+    input.mouseRelX(relx);
+}
+
+void event_mouserely(int rely)
+{
+    input.mouseRelY(rely);
+}

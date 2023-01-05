@@ -293,6 +293,12 @@ EXPORT m64p_error CALL CoreDoCommand(m64p_command Command, int ParamInt, void *P
             keymod = (ParamInt >> 16) & 0xffff;
             event_sdl_keyup(keysym, keymod);
             return M64ERR_SUCCESS;
+        case M64CMD_SEND_MOUSE_RELX:
+            event_mouserelx(ParamInt);
+            return M64ERR_SUCCESS;
+        case M64CMD_SEND_MOUSE_RELY:
+            event_mouserely(ParamInt);
+            return M64ERR_SUCCESS;
         case M64CMD_SET_FRAME_CALLBACK:
             *(void**)&g_FrameCallback = ParamPtr;
             return M64ERR_SUCCESS;
