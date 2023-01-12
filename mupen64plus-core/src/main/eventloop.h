@@ -30,6 +30,8 @@ extern int event_gameshark_active(void);
 extern void event_set_gameshark(int active);
 extern void event_mouserelx(int);
 extern void event_mouserely(int);
+extern void event_mousedown(int);
+extern void event_mouseup(int);
 
 #endif /* define(EVENTLOOP_H) */
 

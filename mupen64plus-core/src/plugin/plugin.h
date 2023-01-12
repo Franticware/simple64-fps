@@ -109,6 +109,8 @@ typedef struct _input_plugin_functions
 	ptr_SetVRUWordMask      setVRUWordMask;
 	ptr_MouseRelX           mouseRelX;
 	ptr_MouseRelY           mouseRelY;
+	ptr_MouseDown           mouseDown;
+	ptr_MouseUp             mouseUp;
 } input_plugin_functions;
 
 extern input_plugin_functions input;

@@ -109,7 +109,9 @@ static const input_plugin_functions dummy_input = {
     0,
     0,
     dummyinput_MouseRelX,
-    dummyinput_MouseRelY
+    dummyinput_MouseRelY,
+    dummyinput_MouseDown,
+    dummyinput_MouseUp
 };
 
 static const rsp_plugin_functions dummy_rsp = {
@@ -403,7 +405,9 @@ static m64p_error plugin_connect_input(m64p_dynlib_handle plugin_handle)
             !GET_FUNC(ptr_SDL_KeyDown, input.keyDown, "SDL_KeyDown") ||
             !GET_FUNC(ptr_SDL_KeyUp, input.keyUp, "SDL_KeyUp") ||
             !GET_FUNC(ptr_MouseRelX, input.mouseRelX, "MouseRelX") ||
-            !GET_FUNC(ptr_MouseRelY, input.mouseRelY, "MouseRelY"))
+            !GET_FUNC(ptr_MouseRelY, input.mouseRelY, "MouseRelY") ||
+            !GET_FUNC(ptr_MouseDown, input.mouseDown, "MouseDown") ||
+            !GET_FUNC(ptr_MouseUp, input.mouseUp, "MouseUp"))
         {
             DebugMessage(M64MSG_ERROR, "broken Input plugin; function(s) not found.");
             plugin_disconnect_input();

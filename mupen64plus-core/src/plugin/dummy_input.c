@@ -93,3 +93,11 @@ void dummyinput_MouseRelX(int)
 void dummyinput_MouseRelY(int)
 {
 }
+
+void dummyinput_MouseDown(int)
+{
+}
+
+void dummyinput_MouseUp(int)
+{
+}

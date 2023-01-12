@@ -10,6 +10,7 @@ typedef struct
     SDL_GameController *gamepad;
     SDL_Joystick *joystick;
     QString profile;
+    int mouse;
     int deadzone;
     int range;
     float sensitivity;

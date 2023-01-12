@@ -109,8 +109,25 @@ ControllerTab::ControllerTab(unsigned int controller, QSettings* settings, QSett
     });
     layout->addWidget(gamepadSelect, 1, 1);
 
+    if (controller == 1)
+    {
+        QLabel *mouseLabel = new QLabel("Mouse", this);
+        layout->addWidget(mouseLabel, 2, 0);
+
+        mouseSelect = new QComboBox(this);
+        layout->addWidget(mouseSelect, 2, 1);
+        for (int i = 0; i != MOUSE_COUNT; ++i)
+        {
+            mouseSelect->addItem(mouseIntToString(i));
+        }
+        mouseSelect->setCurrentText(controllerSettings->value("Controller" + QString::number(controller) + "/Mouse").toString());
+        connect(mouseSelect, &QComboBox::currentTextChanged, [=](QString text) {
+            controllerSettings->setValue("Controller" + QString::number(controller) + "/Mouse", text);
+        });
+    }
+
     QLabel *pakLabel = new QLabel("Pak", this);
-    layout->addWidget(pakLabel, 2, 0);
+    layout->addWidget(pakLabel, 3, 0);
 
     pakSelect = new QComboBox(this);
     pakSelect->addItem("Memory");
@@ -121,7 +138,7 @@ ControllerTab::ControllerTab(unsigned int controller, QSettings* settings, QSett
     connect(pakSelect, &QComboBox::currentTextChanged, [=](QString text) {
         controllerSettings->setValue("Controller" + QString::number(controller) + "/Pak", text);
     });
-    layout->addWidget(pakSelect, 2, 1);
+    layout->addWidget(pakSelect, 3, 1);
 
     setLayout(layout);
 }

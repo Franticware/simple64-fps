@@ -13,6 +13,34 @@
 #include <QProgressDialog>
 #include <SDL2/SDL.h>
 
+#define MOUSE_QUAKE_II 0
+#define MOUSE_DUKE_NUKEM_64 1
+#define MOUSE_COUNT 2
+
+inline QString mouseIntToString(int i)
+{
+    switch (i)
+    {
+    case MOUSE_QUAKE_II:
+        return QString("Quake II");
+    case MOUSE_DUKE_NUKEM_64:
+        return QString("Duke Nukem 64");
+    }
+    return QString("Error: Unexpected value");
+}
+
+inline int mouseStringToInt(QString mouse)
+{
+    for (int i = 0; i != MOUSE_COUNT; ++i)
+    {
+        if (mouse == mouseIntToString(i))
+        {
+            return i;
+        }
+    }
+    return MOUSE_QUAKE_II;
+}
+
 class ControllerTab : public QWidget
 {
     Q_OBJECT
@@ -24,6 +52,7 @@ private slots:
     void fileDownloaded(QNetworkReply* pReply);
 private:
     QComboBox *gamepadSelect;
+    QComboBox *mouseSelect;
     QComboBox *pakSelect;
     QNetworkAccessManager modelDownloader;
     QProgressDialog *progress;

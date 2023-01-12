@@ -142,6 +142,12 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreHandle, void * objec
             controllerSettings->setValue(section + "/Pak", "Memory");
         }
     }
+    {
+        section = "Controller" + QString::number(1);
+        if (!controllerSettings->childGroups().contains(section)) {
+            controllerSettings->setValue(section + "/Mouse", mouseIntToString(0));
+        }
+    }
 
     QStringList values;
     section = "Auto-Keyboard";
@@ -175,6 +181,98 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreHandle, void * objec
         values.replace(0, QString::number(SDL_SCANCODE_I));
         settings->setValue(section + "/CUp", values.join(","));
         values.replace(0, QString::number(SDL_SCANCODE_K));
+        settings->setValue(section + "/CDown", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_LEFT));
+        settings->setValue(section + "/AxisLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RIGHT));
+        settings->setValue(section + "/AxisRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_UP));
+        settings->setValue(section + "/AxisUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_DOWN));
+        settings->setValue(section + "/AxisDown", values.join(","));
+
+        settings->setValue(section + "/Deadzone", DEADZONE_DEFAULT);
+        settings->setValue(section + "/Sensitivity", 100.0);
+        settings->setValue(section + "/MouseSensitivity", 100.0);
+    }
+
+    section = "Keyboard-QuakeII";
+    values.insert(0, "0"/*blank value*/);
+    values.insert(1, "0"/*Keyboard*/);
+    if (!settings->childGroups().contains(section)) {
+        values.replace(0, QString::number(SDL_SCANCODE_LSHIFT));
+        settings->setValue(section + "/A", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_SPACE));
+        settings->setValue(section + "/B", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Z));
+        settings->setValue(section + "/Z", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_A));
+        settings->setValue(section + "/L", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_D));
+        settings->setValue(section + "/R", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RETURN));
+        settings->setValue(section + "/Start", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_X));
+        settings->setValue(section + "/DPadL", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_C));
+        settings->setValue(section + "/DPadR", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_W));
+        settings->setValue(section + "/DPadU", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_S));
+        settings->setValue(section + "/DPadD", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_J));
+        settings->setValue(section + "/CLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Q));
+        settings->setValue(section + "/CRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_I));
+        settings->setValue(section + "/CUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_E));
+        settings->setValue(section + "/CDown", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_LEFT));
+        settings->setValue(section + "/AxisLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RIGHT));
+        settings->setValue(section + "/AxisRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_UP));
+        settings->setValue(section + "/AxisUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_DOWN));
+        settings->setValue(section + "/AxisDown", values.join(","));
+
+        settings->setValue(section + "/Deadzone", DEADZONE_DEFAULT);
+        settings->setValue(section + "/Sensitivity", 100.0);
+        settings->setValue(section + "/MouseSensitivity", 100.0);
+    }
+
+    section = "Keyboard-DukeNukem64";
+    values.insert(0, "0"/*blank value*/);
+    values.insert(1, "0"/*Keyboard*/);
+    if (!settings->childGroups().contains(section)) {
+        values.replace(0, QString::number(SDL_SCANCODE_E));
+        settings->setValue(section + "/A", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_LSHIFT));
+        settings->setValue(section + "/B", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Z));
+        settings->setValue(section + "/Z", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Q));
+        settings->setValue(section + "/L", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_SPACE));
+        settings->setValue(section + "/R", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RETURN));
+        settings->setValue(section + "/Start", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_V));
+        settings->setValue(section + "/DPadL", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_R));
+        settings->setValue(section + "/DPadR", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_T));
+        settings->setValue(section + "/DPadU", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_B));
+        settings->setValue(section + "/DPadD", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_A));
+        settings->setValue(section + "/CLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_D));
+        settings->setValue(section + "/CRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_W));
+        settings->setValue(section + "/CUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_S));
         settings->setValue(section + "/CDown", values.join(","));
         values.replace(0, QString::number(SDL_SCANCODE_LEFT));
         settings->setValue(section + "/AxisLeft", values.join(","));
@@ -684,6 +782,19 @@ void setPak(int Control)
 static int mouseRelXSum = 0;
 static int mouseRelYSum = 0;
 
+static float mouseRelXSumDuke = 0;
+static float mouseRelYSumDuke = 0;
+
+static bool mouseLeft = false;
+static bool mouseRight = false;
+
+#define BUTTON_LEFT 1
+#define BUTTON_RIGHT 2
+#define BUTTON_MIDDLE 4
+
+#define DUKE_MAX_Y_IN 350
+#define DUKE_MAX_Y_OUT 68
+
 static int mouseToAxis(int rel, float sensitivity)
 {
     return std::floor(std::sqrt(rel) * sensitivity + 4.5);
@@ -731,34 +842,144 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisUp", 1);
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisDown", -1);
 
+    if (mouseLeft)
+    {
+        Keys->Value |= 0x0020;
+    }
+
     if (Control == 0)
     {
-        if (mouseRelXSum || mouseRelYSum)
+        switch (controller[0].mouse)
         {
-            int signX = 1;
-            int signY = 1;
-            int mouseRelXSum_ = mouseRelXSum;
-            int mouseRelYSum_ = mouseRelYSum;
-            if (mouseRelXSum_ < 0)
+        case MOUSE_QUAKE_II:
+        {
+            if (mouseRelXSum || mouseRelYSum)
             {
-                signX = -1;
-                mouseRelXSum_ = -mouseRelXSum_;
+                int signX = 1;
+                int signY = 1;
+                int mouseRelXSum_ = mouseRelXSum;
+                int mouseRelYSum_ = mouseRelYSum;
+                if (mouseRelXSum_ < 0)
+                {
+                    signX = -1;
+                    mouseRelXSum_ = -mouseRelXSum_;
+                }
+                if (mouseRelYSum_ < 0)
+                {
+                    signY = -1;
+                    mouseRelYSum_ = -mouseRelYSum_;
+                }
+                const float mouseSensitivityX = 4 * controller[Control].mouse_sensitivity;
+                const float mouseSensitivityY = mouseSensitivityX * 2;
+                mouseRelXSum_ = mouseToAxis(mouseRelXSum_, mouseSensitivityX);
+                mouseRelYSum_ = mouseToAxis(mouseRelYSum_, mouseSensitivityY);
+                if (mouseRelXSum_ > MAX_AXIS_VALUE) mouseRelXSum_ = MAX_AXIS_VALUE;
+                if (mouseRelYSum_ > MAX_AXIS_VALUE) mouseRelYSum_ = MAX_AXIS_VALUE;
+                Keys->X_AXIS = mouseRelXSum_ * signX;
+                Keys->Y_AXIS = mouseRelYSum_ * signY;
+                mouseRelXSum = mouseRelYSum = 0;
             }
-            if (mouseRelYSum_ < 0)
-            {
-                signY = -1;
-                mouseRelYSum_ = -mouseRelYSum_;
-            }
-            const float mouseSensitivityX = 4 * controller[Control].mouse_sensitivity;
-            const float mouseSensitivityY = mouseSensitivityX * 2;
-            mouseRelXSum_ = mouseToAxis(mouseRelXSum_, mouseSensitivityX);
-            mouseRelYSum_ = mouseToAxis(mouseRelYSum_, mouseSensitivityY);
-            if (mouseRelXSum_ > MAX_AXIS_VALUE) mouseRelXSum_ = MAX_AXIS_VALUE;
-            if (mouseRelYSum_ > MAX_AXIS_VALUE) mouseRelYSum_ = MAX_AXIS_VALUE;
-            Keys->X_AXIS = mouseRelXSum_ * signX;
-            Keys->Y_AXIS = mouseRelYSum_ * signY;
-            mouseRelXSum = mouseRelYSum = 0;
         }
+            break;
+        case MOUSE_DUKE_NUKEM_64:
+        {
+            if (mouseRelXSumDuke)
+            {
+                int signX = 1;
+                if (mouseRelXSumDuke < 0)
+                {
+                    mouseRelXSumDuke = -mouseRelXSumDuke;
+                    signX = -1;
+                }
+                if (mouseRelXSumDuke > MAX_AXIS_VALUE)
+                {
+                    Keys->X_AXIS = MAX_AXIS_VALUE * signX;
+                    mouseRelXSumDuke -= MAX_AXIS_VALUE;
+                }
+                else if (mouseRelXSumDuke >= 8)
+                {
+                    Keys->X_AXIS = mouseRelXSumDuke + 0.5;
+                    Keys->X_AXIS *= signX;
+                    mouseRelXSumDuke = 0;
+                }
+                mouseRelXSumDuke *= signX;
+            }
+            if (mouseRelYSumDuke)
+            {
+                Keys->Y_AXIS = std::floor(mouseRelYSumDuke * DUKE_MAX_Y_OUT / float(DUKE_MAX_Y_IN) + 0.5);
+            }
+        }
+            break;
+        }
+
+    }
+}
+
+EXPORT void CALL MouseRelX(int relx)
+{
+    switch (controller[0].mouse)
+    {
+    case MOUSE_QUAKE_II:
+        mouseRelXSum += relx;
+        break;
+    case MOUSE_DUKE_NUKEM_64:
+    {
+        mouseRelXSumDuke += relx * 2 * controller[0].mouse_sensitivity;
+    }
+        break;
+    }
+}
+
+EXPORT void CALL MouseRelY(int rely)
+{
+    switch (controller[0].mouse)
+    {
+    case MOUSE_QUAKE_II:
+        mouseRelYSum -= rely;
+        break;
+    case MOUSE_DUKE_NUKEM_64:
+    {
+        mouseRelYSumDuke += rely * controller[0].mouse_sensitivity;
+        int sign = 1;
+        if (mouseRelYSumDuke < 0)
+        {
+            mouseRelYSumDuke = -mouseRelYSumDuke;
+            sign = -1;
+        }
+        if (mouseRelYSumDuke > DUKE_MAX_Y_IN)
+        {
+            mouseRelYSumDuke = DUKE_MAX_Y_IN;
+        }
+        mouseRelYSumDuke = mouseRelYSumDuke * sign;
+    }
+        break;
+    }
+}
+
+EXPORT void CALL MouseDown(int button)
+{
+    if (button == BUTTON_LEFT)
+    {
+        mouseLeft = true;
+    }
+
+    switch (controller[0].mouse)
+    {
+    case MOUSE_DUKE_NUKEM_64:
+        if (button == BUTTON_RIGHT)
+        {
+            mouseRelXSumDuke = 0;
+            mouseRelYSumDuke = 0;
+        }
+        break;
+    }
+}
+
+EXPORT void CALL MouseUp(int button)
+{
+    if (button == BUTTON_LEFT)
+    {
+        mouseLeft = false;
     }
 }
 
@@ -919,6 +1140,11 @@ EXPORT void CALL InitiateControllers(CONTROL_INFO ControlInfo)
                 controller[i].profile = "Auto-Keyboard";
         }
 
+        if (i == 0)
+        {
+            controller[i].mouse = mouseStringToInt(gameControllerSettings->value("Controller" + QString::number(i + 1) + "/Mouse").toString());
+        }
+
         if (!gameSettings->contains(controller[i].profile + "/Deadzone"))
             gameSettings->setValue(controller[i].profile + "/Deadzone", DEADZONE_DEFAULT);
         if (!gameSettings->contains(controller[i].profile + "/Sensitivity"))
@@ -972,16 +1198,6 @@ EXPORT void CALL SDL_KeyDown(int, int keysym)
 EXPORT void CALL SDL_KeyUp(int, int keysym)
 {
     myKeyState[keysym] = 0;
-}
-
-EXPORT void CALL MouseRelX(int relx)
-{
-    mouseRelXSum += relx;
-}
-
-EXPORT void CALL MouseRelY(int rely)
-{
-    mouseRelYSum -= rely;
 }
 
 EXPORT void CALL PluginConfig()

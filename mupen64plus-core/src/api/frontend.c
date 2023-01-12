@@ -299,6 +299,12 @@ EXPORT m64p_error CALL CoreDoCommand(m64p_command Command, int ParamInt, void *P
         case M64CMD_SEND_MOUSE_RELY:
             event_mouserely(ParamInt);
             return M64ERR_SUCCESS;
+        case M64CMD_SEND_MOUSE_DOWN:
+            event_mousedown(ParamInt);
+            return M64ERR_SUCCESS;
+        case M64CMD_SEND_MOUSE_UP:
+            event_mouseup(ParamInt);
+            return M64ERR_SUCCESS;
         case M64CMD_SET_FRAME_CALLBACK:
             *(void**)&g_FrameCallback = ParamPtr;
             return M64ERR_SUCCESS;

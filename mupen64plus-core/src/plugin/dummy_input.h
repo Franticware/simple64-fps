@@ -40,6 +40,8 @@ extern void dummyinput_SDL_KeyUp(int keymod, int keysym);
 extern void dummyinput_RenderCallback(void);
 extern void dummyinput_MouseRelX(int);
 extern void dummyinput_MouseRelY(int);
+extern void dummyinput_MouseDown(int);
+extern void dummyinput_MouseUp(int);
 
 #endif /* DUMMY_INPUT_H */
 

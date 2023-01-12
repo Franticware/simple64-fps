@@ -37,10 +37,7 @@ bool KeyPressFilter::eventFilter(QObject *obj, QEvent *event)
         if (mouseLock)
         {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-            if (mouseEvent->button() == Qt::LeftButton)
-            {
-                (*CoreDoCommand)(M64CMD_SEND_SDL_KEYDOWN, QT2SDL2(Qt::Key_Z), NULL);
-            }
+            (*CoreDoCommand)(M64CMD_SEND_MOUSE_DOWN, mouseEvent->button(), NULL);
         }
         else
         {
@@ -52,10 +49,7 @@ bool KeyPressFilter::eventFilter(QObject *obj, QEvent *event)
         if (mouseLock)
         {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-            if (mouseEvent->button() == Qt::LeftButton)
-            {
-                (*CoreDoCommand)(M64CMD_SEND_SDL_KEYUP, QT2SDL2(Qt::Key_Z), NULL);
-            }
+            (*CoreDoCommand)(M64CMD_SEND_MOUSE_UP, mouseEvent->button(), NULL);
         }
         return true;
     } else if (event->type() == QEvent::MouseMove) {

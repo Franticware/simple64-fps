@@ -726,3 +726,13 @@ void event_mouserely(int rely)
 {
     input.mouseRelY(rely);
 }
+
+void event_mousedown(int button)
+{
+    input.mouseDown(button);
+}
+
+void event_mouseup(int button)
+{
+    input.mouseUp(button);
+}
