@@ -196,6 +196,52 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreHandle, void * objec
         settings->setValue(section + "/MouseSensitivity", 100.0);
     }
 
+    section = "Keyboard-Quake64";
+    values.insert(0, "0"/*blank value*/);
+    values.insert(1, "0"/*Keyboard*/);
+    if (!settings->childGroups().contains(section)) {
+        values.replace(0, QString::number(SDL_SCANCODE_E));
+        settings->setValue(section + "/A", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Q));
+        settings->setValue(section + "/B", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_Z));
+        settings->setValue(section + "/Z", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_SPACE));
+        settings->setValue(section + "/L", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_LSHIFT));
+        settings->setValue(section + "/R", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RETURN));
+        settings->setValue(section + "/Start", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_A));
+        settings->setValue(section + "/DPadL", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_D));
+        settings->setValue(section + "/DPadR", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_W));
+        settings->setValue(section + "/DPadU", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_S));
+        settings->setValue(section + "/DPadD", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_J));
+        settings->setValue(section + "/CLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_L));
+        settings->setValue(section + "/CRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_I));
+        settings->setValue(section + "/CUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_K));
+        settings->setValue(section + "/CDown", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_LEFT));
+        settings->setValue(section + "/AxisLeft", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_RIGHT));
+        settings->setValue(section + "/AxisRight", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_UP));
+        settings->setValue(section + "/AxisUp", values.join(","));
+        values.replace(0, QString::number(SDL_SCANCODE_DOWN));
+        settings->setValue(section + "/AxisDown", values.join(","));
+
+        settings->setValue(section + "/Deadzone", DEADZONE_DEFAULT);
+        settings->setValue(section + "/Sensitivity", 100.0);
+        settings->setValue(section + "/MouseSensitivity", 100.0);
+    }
+
     section = "Keyboard-QuakeII";
     values.insert(0, "0"/*blank value*/);
     values.insert(1, "0"/*Keyboard*/);
@@ -842,6 +888,14 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisUp", 1);
     setAxis(Control, 1/*Y_AXIS*/, Keys, "AxisDown", -1);
 
+#if 0 // for experiments
+     Keys->X_AXIS /= 85;
+     Keys->Y_AXIS /= 85;
+     int scale = 85;
+     Keys->X_AXIS *= scale;
+     Keys->Y_AXIS *= scale;
+#endif
+
     if (mouseLeft)
     {
         Keys->Value |= 0x0020;
@@ -851,6 +905,39 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
     {
         switch (controller[0].mouse)
         {
+        case MOUSE_QUAKE_64:
+        {
+            // invert speed/walk
+            Keys->Value = ((~Keys->Value) & 0x1000) | (Keys->Value & ~0x1000);
+
+            if (mouseRelXSum || mouseRelYSum)
+            {
+                int signX = 1;
+                int signY = 1;
+                int mouseRelXSum_ = mouseRelXSum;
+                int mouseRelYSum_ = mouseRelYSum;
+                if (mouseRelXSum_ < 0)
+                {
+                    signX = -1;
+                    mouseRelXSum_ = -mouseRelXSum_;
+                }
+                if (mouseRelYSum_ < 0)
+                {
+                    signY = -1;
+                    mouseRelYSum_ = -mouseRelYSum_;
+                }
+                const float mouseSensitivityX = 0.6 * controller[0].mouse_sensitivity;
+                const float mouseSensitivityY = mouseSensitivityX * 1.5;
+                mouseRelXSum_ = 8 + mouseRelXSum_ * mouseSensitivityX;
+                mouseRelYSum_ = 8 + mouseRelYSum_ * mouseSensitivityY;
+                if (mouseRelXSum_ > MAX_AXIS_VALUE) mouseRelXSum_ = MAX_AXIS_VALUE;
+                if (mouseRelYSum_ > MAX_AXIS_VALUE) mouseRelYSum_ = MAX_AXIS_VALUE;
+                Keys->X_AXIS = mouseRelXSum_ * signX;
+                Keys->Y_AXIS = mouseRelYSum_ * signY;
+                mouseRelXSum = mouseRelYSum = 0;
+            }
+        }
+            break;
         case MOUSE_QUAKE_II:
         {
             if (mouseRelXSum || mouseRelYSum)
@@ -869,7 +956,7 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
                     signY = -1;
                     mouseRelYSum_ = -mouseRelYSum_;
                 }
-                const float mouseSensitivityX = 4 * controller[Control].mouse_sensitivity;
+                const float mouseSensitivityX = 4 * controller[0].mouse_sensitivity;
                 const float mouseSensitivityY = mouseSensitivityX * 2;
                 mouseRelXSum_ = mouseToAxis(mouseRelXSum_, mouseSensitivityX);
                 mouseRelYSum_ = mouseToAxis(mouseRelYSum_, mouseSensitivityY);
@@ -919,6 +1006,7 @@ EXPORT void CALL MouseRelX(int relx)
 {
     switch (controller[0].mouse)
     {
+    case MOUSE_QUAKE_64:
     case MOUSE_QUAKE_II:
         mouseRelXSum += relx;
         break;
@@ -934,6 +1022,7 @@ EXPORT void CALL MouseRelY(int rely)
 {
     switch (controller[0].mouse)
     {
+    case MOUSE_QUAKE_64:
     case MOUSE_QUAKE_II:
         mouseRelYSum -= rely;
         break;

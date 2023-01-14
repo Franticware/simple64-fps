@@ -15,7 +15,8 @@
 
 #define MOUSE_QUAKE_II 0
 #define MOUSE_DUKE_NUKEM_64 1
-#define MOUSE_COUNT 2
+#define MOUSE_QUAKE_64 2
+#define MOUSE_COUNT 3
 
 inline QString mouseIntToString(int i)
 {
@@ -25,6 +26,8 @@ inline QString mouseIntToString(int i)
         return QString("Quake II");
     case MOUSE_DUKE_NUKEM_64:
         return QString("Duke Nukem 64");
+    case MOUSE_QUAKE_64:
+        return QString("Quake 64");
     }
     return QString("Error: Unexpected value");
 }

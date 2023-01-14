@@ -4,13 +4,54 @@
 
 **https://www.youtube.com/watch?v=qi255SCU07k**
 
-I wanted to play N64 version of Quake II with a mouse, so I hacked the support into the emulator. I also added support for Duke Nukem 64.
+I wanted to play N64 version of Quake II with a mouse, so I hacked the support into the emulator. I also added support for Quake 64 and Duke Nukem 64.
 
 To start mouse look, click into the game window. To release the mouse, press ~ or numpad Enter.
+
+Please note that there is noticeable input lag, but it is not significantly worse than when using gamepad. I wonder if there is such input lag when playing on the real hardware.
 
 Built nicely for me in Linux using ./build.sh. I am not going to provide Windows build because it is a chore and I get nothing out of it.
 
 Anyway, once you have working build, you can proceed with the initial setup:
+
+## Quake 64
+
+Run the program, go to Settings, Controller Configuration, Controller 1:
+```
+Profile: Keyboard-Quake64
+Gamepad: Keyboard
+Mouse: Quake 64
+Pak: whatever
+```
+
+Start the game, go to Options, Video:
+```
+Crosshair ON
+```
+
+Go to Options, Controls:
+```
+Setup Controller Player 1
+    Style B,
+    then change R Button to Speed
+X Sensitivity MAX
+Y Sensitivity MAX
+Invert stick ON
+Always Run OFF
+Lookspring OFF
+Lookstrafe OFF
+```
+
+The controls are then:
+```
+WASD - movement
+E - next weapon, (A)
+Q - previous weapon, (B)
+left click - shoot
+left shift - walk
+space - jump
+enter - start
+```
 
 ## Quake II
 
@@ -42,8 +83,6 @@ left shift - walk, proceed in menu (A)
 space - jump, go back in menu (B)
 enter - start
 ```
-
-Please note that there is noticeable input lag, but it is not significantly worse than when using gamepad. I wonder if there is such input lag when playing on the real hardware.
 
 ## Duke Nukem 64
 
